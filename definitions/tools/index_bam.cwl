@@ -1,29 +1,34 @@
-#!/usr/bin/env cwl-runner
-
-cwlVersion: v1.0
 class: CommandLineTool
-label: "samtools index"
-arguments: [
-    "/opt/samtools/bin/samtools", "index", "$(runtime.outdir)/$(inputs.bam.basename)", "$(runtime.outdir)/$(inputs.bam.basename).bai",
-    { valueFrom: " && ", shellQuote: false },
-    "cp", "$(inputs.bam.basename).bai", "$(runtime.outdir)/$(inputs.bam.nameroot).bai"
-]
-requirements:
-    - class: ShellCommandRequirement
-    - class: DockerRequirement
-      dockerPull: "mgibio/samtools-cwl:1.0.0"
-    - class: ResourceRequirement
-      ramMin: 4000
-    - class: InitialWorkDirRequirement
-      listing:
-        - ${ var f = inputs.bam; delete f.secondaryFiles; return f }
-    - class: InlineJavascriptRequirement
+cwlVersion: v1.0
+$namespaces:
+  sbg: 'https://www.sevenbridges.com/'
+baseCommand: []
 inputs:
-    bam:
-        type: File
+  - id: bam
+    type: File
 outputs:
-    indexed_bam:
-        type: File
-        secondaryFiles: [.bai, ^.bai]
-        outputBinding:
-            glob: $(inputs.bam.basename)
+  - id: indexed_bam
+    type: File
+    outputBinding:
+      glob: $(inputs.bam.basename)
+    secondaryFiles:
+      - .bai
+      - ^.bai
+doc: |-
+  Modifications
+  - removed cp
+label: samtools index
+arguments:
+  - /opt/samtools/bin/samtools
+  - index
+  - $(runtime.outdir)/$(inputs.bam.basename)
+  - $(runtime.outdir)/$(inputs.bam.basename).bai
+requirements:
+  - class: ResourceRequirement
+    ramMin: 4000
+  - class: DockerRequirement
+    dockerPull: 'mgibio/samtools-cwl:1.0.0'
+  - class: InitialWorkDirRequirement
+    listing:
+      - '${ var f = inputs.bam; delete f.secondaryFiles; return f }'
+  - class: InlineJavascriptRequirement

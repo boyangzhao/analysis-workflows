@@ -17,13 +17,6 @@ inputs:
       prefix: '--variant:mutect'
     secondaryFiles:
       - .tbi
-  - id: pindel_vcf
-    type: File
-    inputBinding:
-      position: 5
-      prefix: '--variant:pindel'
-    secondaryFiles:
-      - .tbi
   - id: reference
     type: string
     inputBinding:
@@ -52,13 +45,14 @@ outputs:
       - .tbi
 doc: |-
   ####Modifications
+  - created a new, to only combine mutect, varscan, and strelka
   - added secondary file .tbi as required, for output
 label: CombineVariants (GATK 3.6)
 arguments:
   - '-genotypeMergeOptions'
   - PRIORITIZE
   - '--rod_priority_list'
-  - 'mutect,varscan,strelka,pindel'
+  - 'mutect,varscan,strelka'
   - '-o'
   - position: 0
     valueFrom: $(runtime.outdir)/combined.vcf.gz

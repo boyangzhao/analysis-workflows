@@ -1,23 +1,33 @@
-#! /usr/bin/env cwl-runner
-cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: ['/bin/cat']
-requirements:
-    - class: ShellCommandRequirement
-    - class: DockerRequirement
-      dockerPull: "ubuntu:xenial"
-    - class: ResourceRequirement
-      ramMin: 4000
-arguments: [
-    { shellQuote: false, valueFrom: "|" },
-    "/bin/grep", "ChrID", "/dev/stdin"
-]
-stdout: "all_region_pindel.head"
+cwlVersion: v1.0
+$namespaces:
+  sbg: 'https://www.sevenbridges.com/'
+baseCommand:
+  - /bin/cat
 inputs:
-    region_pindel_outs:
-        type: File[]
-        inputBinding:
-            position: -1 
+  - id: region_pindel_outs
+    type: 'File[]'
+    inputBinding:
+      position: -1
 outputs:
-    all_region_pindel_head:
-        type: stdout
+  - id: all_region_pindel_head
+    type: File
+    outputBinding:
+      glob: all_region_pindel.head
+doc: |-
+  Modifications
+  - change stdout to glob
+arguments:
+  - position: 0
+    shellQuote: false
+    valueFrom: '|'
+  - /bin/grep
+  - ChrID
+  - /dev/stdin
+requirements:
+  - class: ShellCommandRequirement
+  - class: ResourceRequirement
+    ramMin: 4000
+  - class: DockerRequirement
+    dockerPull: 'ubuntu:xenial'
+stdout: all_region_pindel.head

@@ -1,19 +1,25 @@
-#! /usr/bin/env cwl-runner
-cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: ['/bin/cat']
-requirements:
-    - class: DockerRequirement
-      dockerPull: "ubuntu:xenial"
-    - class: ResourceRequirement
-      ramMin: 4000
-stdout: "per_chromosome_pindel.out"
+cwlVersion: v1.0
+$namespaces:
+  sbg: 'https://www.sevenbridges.com/'
+baseCommand:
+  - /bin/cat
 inputs:
-    pindel_outs:
-        type: File[]
-        inputBinding:
-            position: 1 
+  - id: pindel_outs
+    type: 'File[]'
+    inputBinding:
+      position: 1
 outputs:
-    pindel_out:
-        type: stdout
-
+  - id: pindel_out
+    type: File
+    outputBinding:
+      glob: per_chromosome_pindel.out
+doc: |-
+  Modifications
+  - change stdout to glob
+requirements:
+  - class: ResourceRequirement
+    ramMin: 4000
+  - class: DockerRequirement
+    dockerPull: 'ubuntu:xenial'
+stdout: per_chromosome_pindel.out

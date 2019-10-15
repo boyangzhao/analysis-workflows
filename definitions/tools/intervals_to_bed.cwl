@@ -1,19 +1,26 @@
-#!/usr/bin/env cwl-runner
-cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: ['/usr/bin/perl', '/usr/bin/intervals_to_bed.pl']
-requirements:
-    - class: DockerRequirement
-      dockerPull: "mgibio/perl_helper-cwl:1.0.0"
-    - class: ResourceRequirement
-      ramMin: 4000
-stdout: "interval_list.bed"
+cwlVersion: v1.0
+$namespaces:
+  sbg: 'https://www.sevenbridges.com/'
+baseCommand:
+  - /usr/bin/perl
+  - /usr/bin/intervals_to_bed.pl
 inputs:
-    interval_list:
-        type: File
-        inputBinding:
-            position: 1
+  - id: interval_list
+    type: File
+    inputBinding:
+      position: 1
 outputs:
-    interval_bed:
-        type: stdout
-
+  - id: interval_bed
+    type: File
+    outputBinding:
+      glob: interval_list.bed
+doc: |-
+  Modification
+  - changed stdout to glob
+requirements:
+  - class: ResourceRequirement
+    ramMin: 4000
+  - class: DockerRequirement
+    dockerPull: 'mgibio/perl_helper-cwl:1.0.0'
+stdout: interval_list.bed

@@ -10,7 +10,7 @@ requirements:
       coresMin: 4
     - class: DockerRequirement
       dockerPull: "mgibio/samtools-cwl:1.0.0"
-arguments: ["$(inputs.name).merged.bam", { prefix: "--threads", valueFrom: $(runtime.cores) }]
+arguments: ["$(inputs.name).merged.bam"]
 inputs:
     bams:
         type: File[]

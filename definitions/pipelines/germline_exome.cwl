@@ -149,7 +149,7 @@ outputs:
        outputSource: detect_variants/final_tsv
 steps:
     alignment_and_qc:
-        run: alignment_exome.cwl
+        run: exome_alignment.cwl
         in:
             reference: reference
             sequence: sequence

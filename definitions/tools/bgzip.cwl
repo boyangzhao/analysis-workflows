@@ -1,23 +1,29 @@
-#!/usr/bin/env cwl-runner
-
-cwlVersion: v1.0
 class: CommandLineTool
-label: "bgzip VCF"
-baseCommand: ["/opt/htslib/bin/bgzip"]
-requirements:
-    - class: DockerRequirement
-      dockerPull: "mgibio/samtools-cwl:1.0.0"
-    - class: ResourceRequirement
-      ramMin: 4000
-stdout: $(inputs.file.basename).gz
-arguments:
-    ["-c"]
+cwlVersion: v1.0
+$namespaces:
+  sbg: 'https://www.sevenbridges.com/'
+baseCommand:
+  - /opt/htslib/bin/bgzip
 inputs:
-    file:
-        type: File
-        inputBinding:
-            position: 1
+  - id: file
+    type: File
+    inputBinding:
+      position: 1
 outputs:
-    bgzipped_file:
-        type: stdout
-
+  - id: bgzipped_file
+    type: File
+    outputBinding:
+      glob: $(inputs.file.basename).gz
+doc: |-
+  Modifications
+  - modified stdout to that with file glob
+label: bgzip VCF
+arguments:
+  - '-c'
+requirements:
+  - class: ResourceRequirement
+    ramMin: 4000
+  - class: DockerRequirement
+    dockerPull: 'mgibio/samtools-cwl:1.0.0'
+  - class: InlineJavascriptRequirement
+stdout: $(inputs.file.basename).gz

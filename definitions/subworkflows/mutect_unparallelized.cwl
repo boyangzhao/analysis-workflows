@@ -1,6 +1,11 @@
 class: Workflow
 cwlVersion: v1.0
-label: mutect parallel workflow
+doc: >-
+  Original version was parallelized, but had trouble running on cloud; converted
+  to non-parallelized version
+
+  - removed the split intervals to list cwl and also removed scatter requirement
+label: mutect workflow
 $namespaces:
   sbg: 'https://www.sevenbridges.com/'
 inputs:
@@ -18,10 +23,6 @@ inputs:
     type: string
     'sbg:x': 0
     'sbg:y': 214
-  - id: scatter_count
-    type: int
-    'sbg:x': 0
-    'sbg:y': 107
   - id: tumor_bam
     type: File
     secondaryFiles:
@@ -87,7 +88,7 @@ steps:
   - id: mutect
     in:
       - id: interval_list
-        source: split_interval_list/split_interval_lists
+        source: interval_list
       - id: normal_bam
         source: normal_bam
       - id: reference
@@ -98,21 +99,7 @@ steps:
       - id: vcf
     run: ../tools/mutect.cwl
     label: Mutect2 (GATK 4)
-    scatter:
-      - interval_list
     'sbg:x': 422.5577697753906
     'sbg:y': 193
-  - id: split_interval_list
-    in:
-      - id: interval_list
-        source: interval_list
-      - id: scatter_count
-        source: scatter_count
-    out:
-      - id: split_interval_lists
-    run: ../tools/split_interval_list.cwl
-    'sbg:x': 156.25
-    'sbg:y': 207
 requirements:
   - class: SubworkflowFeatureRequirement
-  - class: ScatterFeatureRequirement
