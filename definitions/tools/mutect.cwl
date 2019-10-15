@@ -2,7 +2,7 @@
 
 cwlVersion: v1.0
 class: CommandLineTool
-label: "Mutect2 (GATK 4) a"
+label: "Mutect2 (GATK 4)"
 
 baseCommand: ["/bin/bash", "Mutect2.sh"]
 
